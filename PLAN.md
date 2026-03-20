@@ -85,7 +85,7 @@ Each food card is an emoji at large size (~64px) with a text label underneath:
 
 ## UI / UX Design Details
 
-- **Font:** System sans-serif stack, large readable sizes (18-24px body text)
+- **Fonts:** Lilita One (titles/headings/question prompts), Quicksand (body text/blurbs) via Google Fonts; large readable sizes (18-24px body text)
 - **Layout:** Centered card-based layout, max-width 700px, mobile-friendly
 - **Food cards:** Rounded rectangles with a subtle shadow; on hover/tap they lift slightly; when selected they get a colored border (green for pick-one, blue highlight for select-all)
 - **Color palette:** Warm and inviting — soft green (#4CAF50) for correct, gentle red/orange (#FF7043) for incorrect, light background (#FFF8E1)

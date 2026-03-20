@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Font Preview — Pick Your Favorite!</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Boogaloo&family=Fredoka:wght@400;600;700&family=Luckiest+Guy&family=Lilita+One&family=Comic+Neue:wght@400;700&family=Nunito:wght@400;600;700&family=Quicksand:wght@400;600;700&family=Patrick+Hand&family=Baloo+2:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #FFF8E1;
+      padding: 2rem 1rem;
+      color: #333;
+    }
+
+    .page-title {
+      text-align: center;
+      font-family: system-ui, sans-serif;
+      font-size: 1.4rem;
+      color: #555;
+      margin-bottom: 0.5rem;
+    }
+
+    .page-subtitle {
+      text-align: center;
+      font-family: system-ui, sans-serif;
+      font-size: 1rem;
+      color: #888;
+      margin-bottom: 2.5rem;
+    }
+
+    .pairing {
+      max-width: 720px;
+      margin: 0 auto 3rem;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+
+    .pairing-header {
+      padding: 1rem 1.5rem;
+      background: linear-gradient(135deg, #e8f5e9, #fff8e1);
+      border-bottom: 2px dashed #c8e6c9;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .pairing-number {
+      font-family: system-ui, sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #fff;
+      background: #4CAF50;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .pairing-meta {
+      font-family: system-ui, sans-serif;
+      font-size: 0.8rem;
+      color: #777;
+      text-align: right;
+    }
+
+    .pairing-meta strong { color: #555; }
+
+    .pairing-body {
+      padding: 2rem 2rem 2.5rem;
+    }
+
+    .sample-title {
+      font-size: 2.5rem;
+      line-height: 1.2;
+      margin-bottom: 0.3rem;
+      color: #2e7d32;
+    }
+
+    .sample-subtitle {
+      font-size: 1.6rem;
+      line-height: 1.3;
+      margin-bottom: 1.2rem;
+      color: #ef6c00;
+    }
+
+    .sample-body {
+      font-size: 1.1rem;
+      line-height: 1.7;
+      color: #444;
+      margin-bottom: 1rem;
+    }
+
+    .sample-blurb {
+      display: inline-block;
+      background: #e8f5e9;
+      border-left: 4px solid #4CAF50;
+      padding: 0.6rem 1rem;
+      border-radius: 0 10px 10px 0;
+      font-size: 1rem;
+      line-height: 1.5;
+      color: #2e7d32;
+      margin-bottom: 1rem;
+    }
+
+    .sample-card {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: #fff3e0;
+      border: 2px solid #ffe0b2;
+      border-radius: 14px;
+      padding: 0.5rem 1rem;
+      margin-top: 0.5rem;
+    }
+
+    .sample-card .emoji { font-size: 2rem; }
+
+    .sample-card .label {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #e65100;
+    }
+
+    /* ---- Pairing 1: Bangers + Comic Neue ---- */
+    .p1 .sample-title    { font-family: 'Bangers', cursive; letter-spacing: 2px; }
+    .p1 .sample-subtitle { font-family: 'Bangers', cursive; letter-spacing: 1px; }
+    .p1 .sample-body     { font-family: 'Comic Neue', cursive; }
+    .p1 .sample-blurb    { font-family: 'Comic Neue', cursive; font-weight: 700; }
+    .p1 .sample-card .label { font-family: 'Comic Neue', cursive; }
+
+    /* ---- Pairing 2: Luckiest Guy + Nunito ---- */
+    .p2 .sample-title    { font-family: 'Luckiest Guy', cursive; }
+    .p2 .sample-subtitle { font-family: 'Luckiest Guy', cursive; }
+    .p2 .sample-body     { font-family: 'Nunito', sans-serif; }
+    .p2 .sample-blurb    { font-family: 'Nunito', sans-serif; font-weight: 700; }
+    .p2 .sample-card .label { font-family: 'Nunito', sans-serif; }
+
+    /* ---- Pairing 3: Fredoka + Quicksand ---- */
+    .p3 .sample-title    { font-family: 'Fredoka', sans-serif; font-weight: 700; }
+    .p3 .sample-subtitle { font-family: 'Fredoka', sans-serif; font-weight: 600; }
+    .p3 .sample-body     { font-family: 'Quicksand', sans-serif; }
+    .p3 .sample-blurb    { font-family: 'Quicksand', sans-serif; font-weight: 700; }
+    .p3 .sample-card .label { font-family: 'Quicksand', sans-serif; }
+
+    /* ---- Pairing 4: Boogaloo + Patrick Hand ---- */
+    .p4 .sample-title    { font-family: 'Boogaloo', cursive; }
+    .p4 .sample-subtitle { font-family: 'Boogaloo', cursive; }
+    .p4 .sample-body     { font-family: 'Patrick Hand', cursive; font-size: 1.15rem; }
+    .p4 .sample-blurb    { font-family: 'Patrick Hand', cursive; font-size: 1.1rem; }
+    .p4 .sample-card .label { font-family: 'Patrick Hand', cursive; }
+
+    /* ---- Pairing 5: Lilita One + Baloo 2 ---- */
+    .p5 .sample-title    { font-family: 'Lilita One', sans-serif; }
+    .p5 .sample-subtitle { font-family: 'Lilita One', sans-serif; }
+    .p5 .sample-body     { font-family: 'Baloo 2', cursive; }
+    .p5 .sample-blurb    { font-family: 'Baloo 2', cursive; font-weight: 700; }
+    .p5 .sample-card .label { font-family: 'Baloo 2', cursive; }
+  </style>
+</head>
+<body>
+
+  <h1 class="page-title">Font Pairing Preview</h1>
+  <p class="page-subtitle">Each option pairs a <strong>title font</strong> with a <strong>body/blurb font</strong>. Open in a browser to compare!</p>
+
+  <!-- PAIRING 1 -->
+  <div class="pairing p1">
+    <div class="pairing-header">
+      <div class="pairing-number">1</div>
+      <div class="pairing-meta">
+        Title: <strong>Bangers</strong> &nbsp;|&nbsp; Body: <strong>Comic Neue</strong>
+      </div>
+    </div>
+    <div class="pairing-body">
+      <div class="sample-title">Macro Munch!</div>
+      <div class="sample-subtitle">The Food Group Challenge</div>
+      <p class="sample-body">
+        Your body needs three super-fuels to keep going strong: proteins, carbs, and fats.
+        Each one has a special job — let's find out which foods belong to which group!
+      </p>
+      <div class="sample-blurb">
+        🧠 Fun Fact: Your brain is about 60% fat — healthy fats help you think better!
+      </div>
+      <div><div class="sample-card"><span class="emoji">🍗</span><span class="label">Chicken</span></div></div>
+    </div>
+  </div>
+
+  <!-- PAIRING 2 -->
+  <div class="pairing p2">
+    <div class="pairing-header">
+      <div class="pairing-number">2</div>
+      <div class="pairing-meta">
+        Title: <strong>Luckiest Guy</strong> &nbsp;|&nbsp; Body: <strong>Nunito</strong>
+      </div>
+    </div>
+    <div class="pairing-body">
+      <div class="sample-title">Macro Munch!</div>
+      <div class="sample-subtitle">The Food Group Challenge</div>
+      <p class="sample-body">
+        Your body needs three super-fuels to keep going strong: proteins, carbs, and fats.
+        Each one has a special job — let's find out which foods belong to which group!
+      </p>
+      <div class="sample-blurb">
+        🧠 Fun Fact: Your brain is about 60% fat — healthy fats help you think better!
+      </div>
+      <div><div class="sample-card"><span class="emoji">🥑</span><span class="label">Avocado</span></div></div>
+    </div>
+  </div>
+
+  <!-- PAIRING 3 -->
+  <div class="pairing p3">
+    <div class="pairing-header">
+      <div class="pairing-number">3</div>
+      <div class="pairing-meta">
+        Title: <strong>Fredoka</strong> &nbsp;|&nbsp; Body: <strong>Quicksand</strong>
+      </div>
+    </div>
+    <div class="pairing-body">
+      <div class="sample-title">Macro Munch!</div>
+      <div class="sample-subtitle">The Food Group Challenge</div>
+      <p class="sample-body">
+        Your body needs three super-fuels to keep going strong: proteins, carbs, and fats.
+        Each one has a special job — let's find out which foods belong to which group!
+      </p>
+      <div class="sample-blurb">
+        🧠 Fun Fact: Your brain is about 60% fat — healthy fats help you think better!
+      </div>
+      <div><div class="sample-card"><span class="emoji">🍌</span><span class="label">Banana</span></div></div>
+    </div>
+  </div>
+
+  <!-- PAIRING 4 -->
+  <div class="pairing p4">
+    <div class="pairing-header">
+      <div class="pairing-number">4</div>
+      <div class="pairing-meta">
+        Title: <strong>Boogaloo</strong> &nbsp;|&nbsp; Body: <strong>Patrick Hand</strong>
+      </div>
+    </div>
+    <div class="pairing-body">
+      <div class="sample-title">Macro Munch!</div>
+      <div class="sample-subtitle">The Food Group Challenge</div>
+      <p class="sample-body">
+        Your body needs three super-fuels to keep going strong: proteins, carbs, and fats.
+        Each one has a special job — let's find out which foods belong to which group!
+      </p>
+      <div class="sample-blurb">
+        🧠 Fun Fact: Your brain is about 60% fat — healthy fats help you think better!
+      </div>
+      <div><div class="sample-card"><span class="emoji">🥜</span><span class="label">Peanuts</span></div></div>
+    </div>
+  </div>
+
+  <!-- PAIRING 5 -->
+  <div class="pairing p5">
+    <div class="pairing-header">
+      <div class="pairing-number">5</div>
+      <div class="pairing-meta">
+        Title: <strong>Lilita One</strong> &nbsp;|&nbsp; Body: <strong>Baloo 2</strong>
+      </div>
+    </div>
+    <div class="pairing-body">
+      <div class="sample-title">Macro Munch!</div>
+      <div class="sample-subtitle">The Food Group Challenge</div>
+      <p class="sample-body">
+        Your body needs three super-fuels to keep going strong: proteins, carbs, and fats.
+        Each one has a special job — let's find out which foods belong to which group!
+      </p>
+      <div class="sample-blurb">
+        🧠 Fun Fact: Your brain is about 60% fat — healthy fats help you think better!
+      </div>
+      <div><div class="sample-card"><span class="emoji">🍚</span><span class="label">Rice</span></div></div>
+    </div>
+  </div>
+
+</body>
+</html>
