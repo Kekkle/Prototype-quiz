@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Macro Munch! The Food Group Challenge</title>
+<style>
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: #FFF8E1;
+  color: #3E2723;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 24px 16px;
+  line-height: 1.5;
+}
+
+.app {
+  width: 100%;
+  max-width: 700px;
+}
+
+/* ---- Screens ---- */
+
+.screen {
+  display: none;
+  animation: fadeIn 0.4s ease;
+}
+
+.screen.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: scale(1); }
+  40%      { transform: scale(1.12); }
+  60%      { transform: scale(0.95); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%      { transform: translateX(-8px); }
+  40%      { transform: translateX(8px); }
+  60%      { transform: translateX(-6px); }
+  80%      { transform: translateX(6px); }
+}
+
+/* ---- Welcome Screen ---- */
+
+.welcome {
+  text-align: center;
+  padding: 48px 16px;
+}
+
+.welcome-emoji {
+  font-size: 72px;
+  margin-bottom: 16px;
+}
+
+.welcome h1 {
+  font-size: 2rem;
+  color: #E65100;
+  margin-bottom: 12px;
+}
+
+.welcome .subtitle {
+  font-size: 1.15rem;
+  color: #5D4037;
+  max-width: 520px;
+  margin: 0 auto 32px;
+}
+
+.welcome .macro-preview {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+.macro-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff;
+  border-radius: 40px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.macro-pill.protein { color: #C62828; }
+.macro-pill.carbs   { color: #F57F17; }
+.macro-pill.fats    { color: #2E7D32; }
+
+/* ---- Buttons ---- */
+
+.btn {
+  display: inline-block;
+  padding: 14px 36px;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn-primary {
+  background: #FF6D00;
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: #E65100;
+}
+
+.btn-secondary {
+  background: #fff;
+  color: #E65100;
+  border: 2px solid #E65100;
+}
+
+.btn-lock {
+  background: #1565C0;
+  color: #fff;
+  margin-top: 16px;
+}
+
+.btn-lock:hover {
+  background: #0D47A1;
+}
+
+.btn-lock:disabled {
+  background: #B0BEC5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ---- Quiz Screen ---- */
+
+.quiz-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.progress-bar-track {
+  width: 100%;
+  height: 12px;
+  background: #FFE0B2;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #FF8A65, #FF6D00);
+  border-radius: 6px;
+  transition: width 0.4s ease;
+}
+
+.progress-text {
+  font-size: 0.95rem;
+  color: #8D6E63;
+  font-weight: 600;
+}
+
+.question-type-badge {
+  display: inline-block;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+}
+
+.badge-pick-one {
+  background: #E8F5E9;
+  color: #2E7D32;
+}
+
+.badge-select-all {
+  background: #E3F2FD;
+  color: #1565C0;
+}
+
+.question-prompt {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #3E2723;
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+/* ---- Food Card Grid ---- */
+
+.food-grid {
+  display: grid;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.food-grid.grid-4 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.food-grid.grid-6 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 480px) {
+  .food-grid.grid-4,
+  .food-grid.grid-6 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.food-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 20px 12px;
+  background: #fff;
+  border: 3px solid transparent;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.food-card:hover:not(.disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+
+.food-card:focus-visible {
+  outline: 3px solid #FF6D00;
+  outline-offset: 2px;
+}
+
+.food-card.selected {
+  border-color: #1565C0;
+  background: #E3F2FD;
+}
+
+.food-card.correct {
+  border-color: #4CAF50;
+  background: #E8F5E9;
+  animation: bounce 0.5s ease;
+}
+
+.food-card.incorrect {
+  border-color: #FF7043;
+  background: #FBE9E7;
+  animation: shake 0.4s ease;
+}
+
+.food-card.reveal-correct {
+  border-color: #4CAF50;
+  background: #E8F5E9;
+}
+
+.food-card.disabled {
+  cursor: default;
+  opacity: 0.85;
+}
+
+.food-card .emoji {
+  font-size: 48px;
+  line-height: 1;
+}
+
+.food-card .label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #5D4037;
+}
+
+/* ---- Feedback ---- */
+
+.feedback {
+  text-align: center;
+  padding: 20px;
+  border-radius: 16px;
+  margin-top: 20px;
+  animation: fadeIn 0.3s ease;
+}
+
+.feedback.correct-feedback {
+  background: #E8F5E9;
+  border: 2px solid #A5D6A7;
+}
+
+.feedback.incorrect-feedback {
+  background: #FBE9E7;
+  border: 2px solid #FFAB91;
+}
+
+.feedback-icon {
+  font-size: 36px;
+  margin-bottom: 8px;
+}
+
+.feedback-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.feedback.correct-feedback .feedback-title { color: #2E7D32; }
+.feedback.incorrect-feedback .feedback-title { color: #D84315; }
+
+.feedback .fun-fact {
+  font-size: 1rem;
+  color: #5D4037;
+  margin-top: 8px;
+  font-style: italic;
+}
+
+.feedback .correction {
+  font-size: 0.95rem;
+  color: #BF360C;
+  margin-bottom: 4px;
+}
+
+.quiz-actions {
+  text-align: center;
+  margin-top: 24px;
+}
+
+/* ---- Results Screen ---- */
+
+.results {
+  text-align: center;
+  padding: 40px 16px;
+}
+
+.results-emoji {
+  font-size: 64px;
+  margin-bottom: 12px;
+}
+
+.results h2 {
+  font-size: 1.8rem;
+  color: #E65100;
+  margin-bottom: 8px;
+}
+
+.results .score-text {
+  font-size: 1.3rem;
+  color: #5D4037;
+  margin-bottom: 8px;
+}
+
+.results .tier-badge {
+  display: inline-block;
+  padding: 8px 24px;
+  border-radius: 30px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 32px;
+}
+
+.tier-master  { background: #FFF9C4; color: #F57F17; border: 2px solid #F9A825; }
+.tier-ninja   { background: #E8F5E9; color: #2E7D32; border: 2px solid #66BB6A; }
+.tier-explorer{ background: #E3F2FD; color: #1565C0; border: 2px solid #42A5F5; }
+.tier-learner { background: #FBE9E7; color: #D84315; border: 2px solid #FF8A65; }
+
+.recap {
+  text-align: left;
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 32px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+.recap h3 {
+  font-size: 1.1rem;
+  color: #3E2723;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.recap-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.recap-row:last-child {
+  margin-bottom: 0;
+}
+
+.recap-macro-name {
+  font-weight: 700;
+  min-width: 90px;
+  font-size: 1rem;
+}
+
+.recap-macro-name.protein { color: #C62828; }
+.recap-macro-name.carbs   { color: #F57F17; }
+.recap-macro-name.fats    { color: #2E7D32; }
+
+.recap-foods {
+  font-size: 0.95rem;
+  color: #5D4037;
+}
+
+.results-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Welcome Screen -->
+  <div id="welcome-screen" class="screen active welcome">
+    <div class="welcome-emoji">🍽️</div>
+    <h1>Macro Munch!</h1>
+    <p class="subtitle">
+      Everything you eat is made of three big building blocks called <strong>macronutrients</strong>.
+      Take this quiz to find out how well you know your proteins, carbs, and fats!
+    </p>
+    <div class="macro-preview">
+      <span class="macro-pill protein">💪 Protein</span>
+      <span class="macro-pill carbs">⚡ Carbs</span>
+      <span class="macro-pill fats">🧠 Fats</span>
+    </div>
+    <button class="btn btn-primary" id="start-btn">Start the Challenge!</button>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="quiz-screen" class="screen">
+    <div class="quiz-header">
+      <div class="progress-bar-track">
+        <div class="progress-bar-fill" id="progress-fill"></div>
+      </div>
+      <div class="progress-text" id="progress-text"></div>
+    </div>
+    <div id="question-type-badge" class="question-type-badge"></div>
+    <div class="question-prompt" id="question-prompt"></div>
+    <div class="food-grid" id="food-grid"></div>
+    <div style="text-align:center">
+      <button class="btn btn-lock" id="lock-btn" style="display:none">Lock In!</button>
+    </div>
+    <div id="feedback-area"></div>
+    <div class="quiz-actions">
+      <button class="btn btn-primary" id="next-btn" style="display:none">Next</button>
+    </div>
+  </div>
+
+  <!-- Results Screen -->
+  <div id="results-screen" class="screen results">
+    <div class="results-emoji" id="results-emoji"></div>
+    <h2>Quiz Complete!</h2>
+    <p class="score-text" id="score-text"></p>
+    <div id="tier-badge" class="tier-badge"></div>
+    <div class="recap">
+      <h3>Quick Recap</h3>
+      <div class="recap-row">
+        <span class="recap-macro-name protein">💪 Protein</span>
+        <span class="recap-foods">Builds &amp; repairs muscles, organs, and skin. Found in chicken, fish, eggs, beans, steak, and peanuts.</span>
+      </div>
+      <div class="recap-row">
+        <span class="recap-macro-name carbs">⚡ Carbs</span>
+        <span class="recap-foods">Your body's main energy source. Found in rice, bread, pasta, potatoes, corn, and bananas.</span>
+      </div>
+      <div class="recap-row">
+        <span class="recap-macro-name fats">🧠 Fats</span>
+        <span class="recap-foods">Protects organs, supports brain health, and helps absorb vitamins. Found in avocado, olive oil, cheese, peanuts, and butter.</span>
+      </div>
+    </div>
+    <div class="results-actions">
+      <button class="btn btn-primary" id="play-again-btn">Play Again!</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const FOODS = {
+  chicken:  { emoji: "🍗", label: "Chicken" },
+  bread:    { emoji: "🍞", label: "Bread" },
+  rice:     { emoji: "🍚", label: "Rice" },
+  egg:      { emoji: "🥚", label: "Egg" },
+  fish:     { emoji: "🐟", label: "Fish" },
+  avocado:  { emoji: "🥑", label: "Avocado" },
+  pasta:    { emoji: "🍝", label: "Pasta" },
+  potato:   { emoji: "🥔", label: "Potato" },
+  banana:   { emoji: "🍌", label: "Banana" },
+  corn:     { emoji: "🌽", label: "Corn" },
+  cheese:   { emoji: "🧀", label: "Cheese" },
+  steak:    { emoji: "🥩", label: "Steak" },
+  peanuts:  { emoji: "🥜", label: "Peanuts" },
+  butter:   { emoji: "🧈", label: "Butter" },
+  olive:    { emoji: "🫒", label: "Olive" },
+  apple:    { emoji: "🍎", label: "Apple" },
+  beans:    { emoji: "🫘", label: "Beans" },
+};
+
+const QUESTIONS = [
+  {
+    type: "pick-one",
+    prompt: "Which of these is a great source of protein?",
+    options: ["chicken", "bread", "apple", "butter"],
+    correct: ["chicken"],
+    funFact: "Protein helps build and repair your muscles — like construction workers for your body!"
+  },
+  {
+    type: "pick-one",
+    prompt: "Which food gives you the most carbohydrates for energy?",
+    options: ["rice", "egg", "avocado", "fish"],
+    correct: ["rice"],
+    funFact: "Carbs are your body's favorite fuel — like gasoline for a car!"
+  },
+  {
+    type: "pick-one",
+    prompt: "Which of these foods is high in healthy fats?",
+    options: ["avocado", "potato", "pasta", "chicken"],
+    correct: ["avocado"],
+    funFact: "Healthy fats help your brain work better — your brain is actually about 60% fat!"
+  },
+  {
+    type: "pick-one",
+    prompt: "Which snack is a source of protein?",
+    options: ["peanuts", "banana", "bread", "corn"],
+    correct: ["peanuts"],
+    funFact: "Nuts have protein AND healthy fats — a two-in-one power snack!"
+  },
+  {
+    type: "pick-one",
+    prompt: "Which food is a carbohydrate that grows underground?",
+    options: ["potato", "cheese", "steak", "olive"],
+    correct: ["potato"],
+    funFact: "Potatoes are packed with energy and vitamins — they fueled entire civilizations!"
+  },
+  {
+    type: "select-all",
+    prompt: "Select ALL the foods that are rich in protein!",
+    options: ["egg", "fish", "bread", "beans", "banana", "butter"],
+    correct: ["egg", "fish", "beans"],
+    funFact: "Protein isn't just in meat — beans and eggs are protein superstars too!"
+  },
+  {
+    type: "select-all",
+    prompt: "Select ALL the carbohydrate foods!",
+    options: ["pasta", "corn", "cheese", "banana", "steak", "bread"],
+    correct: ["pasta", "corn", "banana", "bread"],
+    funFact: "Fruits like bananas are carbs too — natural sugars are a type of carbohydrate!"
+  },
+  {
+    type: "select-all",
+    prompt: "Select ALL the foods with healthy fats!",
+    options: ["avocado", "olive", "rice", "cheese", "apple", "peanuts"],
+    correct: ["avocado", "olive", "cheese", "peanuts"],
+    funFact: "Your body NEEDS specific fats to absorb vitamins A, D, E, and K!"
+  },
+  {
+    type: "select-all",
+    prompt: "Select ALL the foods that are mainly protein!",
+    options: ["chicken", "steak", "potato", "fish", "pasta", "egg"],
+    correct: ["chicken", "steak", "fish", "egg"],
+    funFact: "Your body uses protein to make enzymes and hormones — it does way more than just build muscle!"
+  }
+];
+
+let state = {
+  currentIndex: 0,
+  score: 0,
+  answered: false,
+  selected: new Set(),
+  order: [],
+};
+
+const $ = (sel) => document.querySelector(sel);
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function showScreen(id) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  $(id).classList.add("active");
+}
+
+function startQuiz() {
+  state.currentIndex = 0;
+  state.score = 0;
+  state.order = shuffle(QUESTIONS.map((_, i) => i));
+  showScreen("#quiz-screen");
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const qi = state.order[state.currentIndex];
+  const q = QUESTIONS[qi];
+
+  state.answered = false;
+  state.selected = new Set();
+
+  const total = state.order.length;
+  const current = state.currentIndex + 1;
+
+  $("#progress-fill").style.width = `${(current / total) * 100}%`;
+  $("#progress-text").textContent = `Question ${current} of ${total}`;
+
+  const badge = $("#question-type-badge");
+  if (q.type === "pick-one") {
+    badge.textContent = "Pick One";
+    badge.className = "question-type-badge badge-pick-one";
+  } else {
+    badge.textContent = "Select All That Apply";
+    badge.className = "question-type-badge badge-select-all";
+  }
+
+  $("#question-prompt").textContent = q.prompt;
+
+  const grid = $("#food-grid");
+  grid.className = "food-grid " + (q.type === "pick-one" ? "grid-4" : "grid-6");
+  grid.innerHTML = "";
+
+  q.options.forEach(key => {
+    const food = FOODS[key];
+    const card = document.createElement("button");
+    card.className = "food-card";
+    card.setAttribute("role", "option");
+    card.setAttribute("aria-label", food.label);
+    card.setAttribute("data-key", key);
+    card.innerHTML = `<span class="emoji">${food.emoji}</span><span class="label">${food.label}</span>`;
+    card.addEventListener("click", () => handleCardClick(card, key, q));
+    grid.appendChild(card);
+  });
+
+  const lockBtn = $("#lock-btn");
+  lockBtn.style.display = q.type === "select-all" ? "inline-block" : "none";
+  lockBtn.disabled = true;
+
+  $("#feedback-area").innerHTML = "";
+  $("#next-btn").style.display = "none";
+}
+
+function handleCardClick(card, key, q) {
+  if (state.answered) return;
+
+  if (q.type === "pick-one") {
+    state.selected = new Set([key]);
+    submitAnswer(q);
+  } else {
+    if (state.selected.has(key)) {
+      state.selected.delete(key);
+      card.classList.remove("selected");
+    } else {
+      state.selected.add(key);
+      card.classList.add("selected");
+    }
+    $("#lock-btn").disabled = state.selected.size === 0;
+  }
+}
+
+function submitAnswer(q) {
+  state.answered = true;
+
+  const correctSet = new Set(q.correct);
+  const isCorrect = state.selected.size === correctSet.size &&
+    [...state.selected].every(k => correctSet.has(k));
+
+  if (isCorrect) state.score++;
+
+  const cards = document.querySelectorAll(".food-card");
+  cards.forEach(card => {
+    const key = card.dataset.key;
+    card.classList.add("disabled");
+
+    if (q.type === "pick-one") {
+      if (state.selected.has(key)) {
+        card.classList.add(isCorrect ? "correct" : "incorrect");
+      }
+      if (!isCorrect && correctSet.has(key)) {
+        card.classList.add("reveal-correct");
+      }
+    } else {
+      if (correctSet.has(key) && state.selected.has(key)) {
+        card.classList.add("correct");
+      } else if (!correctSet.has(key) && state.selected.has(key)) {
+        card.classList.add("incorrect");
+      } else if (correctSet.has(key) && !state.selected.has(key)) {
+        card.classList.add("reveal-correct");
+      }
+    }
+  });
+
+  const correctLabels = q.correct.map(k => FOODS[k].label).join(", ");
+
+  let feedbackHTML;
+  if (isCorrect) {
+    feedbackHTML = `
+      <div class="feedback correct-feedback">
+        <div class="feedback-icon">🎉</div>
+        <div class="feedback-title">Awesome, that's right!</div>
+        <div class="fun-fact">💡 ${q.funFact}</div>
+      </div>`;
+  } else {
+    feedbackHTML = `
+      <div class="feedback incorrect-feedback">
+        <div class="feedback-icon">🤔</div>
+        <div class="feedback-title">Not quite!</div>
+        <div class="correction">The correct answer${q.correct.length > 1 ? "s were" : " was"}: ${correctLabels}</div>
+        <div class="fun-fact">💡 ${q.funFact}</div>
+      </div>`;
+  }
+
+  $("#feedback-area").innerHTML = feedbackHTML;
+  $("#lock-btn").style.display = "none";
+  $("#next-btn").style.display = "inline-block";
+}
+
+function nextQuestion() {
+  state.currentIndex++;
+  if (state.currentIndex >= state.order.length) {
+    showResults();
+  } else {
+    renderQuestion();
+  }
+}
+
+function showResults() {
+  showScreen("#results-screen");
+
+  const total = state.order.length;
+  const score = state.score;
+
+  $("#score-text").textContent = `You got ${score} out of ${total}!`;
+
+  let tierText, tierClass, resultsEmoji;
+  if (score === total) {
+    tierText = "🏆 Macro Master";
+    tierClass = "tier-badge tier-master";
+    resultsEmoji = "🌟";
+  } else if (score >= 7) {
+    tierText = "🥷 Nutrition Ninja";
+    tierClass = "tier-badge tier-ninja";
+    resultsEmoji = "💪";
+  } else if (score >= 5) {
+    tierText = "🔍 Food Explorer";
+    tierClass = "tier-badge tier-explorer";
+    resultsEmoji = "🔍";
+  } else {
+    tierText = "📚 Keep Learning!";
+    tierClass = "tier-badge tier-learner";
+    resultsEmoji = "📚";
+  }
+
+  $("#results-emoji").textContent = resultsEmoji;
+  const badge = $("#tier-badge");
+  badge.textContent = tierText;
+  badge.className = tierClass;
+}
+
+// Event listeners
+$("#start-btn").addEventListener("click", startQuiz);
+$("#next-btn").addEventListener("click", nextQuestion);
+$("#lock-btn").addEventListener("click", () => {
+  const qi = state.order[state.currentIndex];
+  submitAnswer(QUESTIONS[qi]);
+});
+$("#play-again-btn").addEventListener("click", startQuiz);
+</script>
+</body>
+</html>
